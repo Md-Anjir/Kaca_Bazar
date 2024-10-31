@@ -1,0 +1,26 @@
+//For Backend
+backend
+
+	npm init -y
+	npm install mysql2 express nodemon cors
+
+"scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  }
+
+
+
+
+
+//For Frontend
+npx create-react-app frontend
+cd frontend
+npm install axios bootstrap jquery react-dom react-router-dom react-scripts web-vitals
+
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  }

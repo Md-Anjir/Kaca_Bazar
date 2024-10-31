@@ -1,0 +1,115 @@
+-- Create Buyer Table
+CREATE TABLE Buyer (
+    Buyer_ID INT PRIMARY KEY,
+    Buyer_Name VARCHAR(255) NOT NULL,
+    Password VARCHAR(255) NOT NULL,
+    Phone_Number VARCHAR(20),
+    Address VARCHAR(300)
+);
+
+-- Create Seller Table
+CREATE TABLE Seller (
+    Seller_ID INT PRIMARY KEY,
+    Seller_Name VARCHAR(255) NOT NULL,
+    Phone_Number VARCHAR(20),
+    Rating DECIMAL(3, 2),
+    Address VARCHAR(300)
+);
+
+-- Create Zonal_Admin Table
+CREATE TABLE Zonal_Admin (
+    Zonal_Admin_ID INT PRIMARY KEY,
+    Zonal_Admin_Name VARCHAR(255) NOT NULL,
+    Password VARCHAR(255) NOT NULL,
+    Location_ID INT,
+    FOREIGN KEY (Location_ID) REFERENCES Location(Location_ID)
+);
+
+-- Create Super_Admin Table
+CREATE TABLE Super_Admin (
+    Admin_ID INT PRIMARY KEY,
+    Admin_Name VARCHAR(255) NOT NULL,
+    Password VARCHAR(255) NOT NULL
+);
+
+-- Create Delivery_Point Table
+CREATE TABLE Delivery_Point (
+    Delivery_Point_ID INT AUTO_INCREMENT PRIMARY KEY,
+    Delivery_Point_Name VARCHAR(255) NOT NULL,
+    Location_ID INT,
+    FOREIGN KEY (Location_ID) REFERENCES Location(Location_ID)
+);
+
+-- Create Location Table
+CREATE TABLE Location (
+    Location_ID INT AUTO_INCREMENT PRIMARY KEY,
+    Location_Name VARCHAR(255) NOT NULL
+);
+
+-- Create Product_AD Table (for product advertisements)
+CREATE TABLE Product_AD (
+    Product_AD_ID INT AUTO_INCREMENT PRIMARY KEY,
+    Product_ID INT,
+    Stock INT NOT NULL,
+    Unit_Name ENUM('KG', 'piece') NOT NULL DEFAULT 'KG', 
+    Minimum_Order_Quantity INT NOT NULL,
+    Unit_Price DECIMAL(10, 2) NOT NULL,
+    Delivery_Date DATE NOT NULL,
+    Description VARCHAR(1000),
+    Location_ID INT,
+    FOREIGN KEY (Location_ID) REFERENCES Location(Location_ID),
+    FOREIGN KEY (Product_ID) REFERENCES Product_List(Product_ID)
+);
+
+-- Create Product_List Table (for listed products)
+CREATE TABLE Product_List (
+    Product_ID INT AUTO_INCREMENT PRIMARY KEY,
+    Product_Name VARCHAR(255) NOT NULL,
+    Status ENUM('on', 'off') NOT NULL DEFAULT 'on'
+);
+
+-- Create Product_Request Table
+CREATE TABLE Product_Request (
+    Request_ID INT AUTO_INCREMENT PRIMARY KEY,
+    Seller_ID INT,
+    Zonal_Admin_ID INT,
+    Product_Name VARCHAR(255) NOT NULL,
+    Description VARCHAR(1000),
+    FOREIGN KEY (Seller_ID) REFERENCES Seller(Seller_ID),
+    FOREIGN KEY (Zonal_Admin_ID) REFERENCES Zonal_Admin(Zonal_Admin_ID)
+);
+
+-- Create Order Table
+CREATE TABLE `Order` (
+    Order_ID INT AUTO_INCREMENT PRIMARY KEY,
+    Buyer_ID INT,
+    Product_AD_ID INT,
+    Quantity INT NOT NULL,
+    Price DECIMAL(10, 2) NOT NULL,
+    Confirmation ENUM('no', 'yes') NOT NULL DEFAULT 'no',
+    Delivery_Point_ID INT,
+    Date DATE NOT NULL,
+    Time TIME NOT NULL,
+    FOREIGN KEY (Buyer_ID) REFERENCES Buyer(Buyer_ID),
+    FOREIGN KEY (Product_AD_ID) REFERENCES Product_AD(Product_AD_ID),
+    FOREIGN KEY (Delivery_Point_ID) REFERENCES Delivery_Point(Delivery_Point_ID)
+);
+
+
+-- Create Review Table
+CREATE TABLE Review (
+    Review_ID INT AUTO_INCREMENT PRIMARY KEY,
+    Comment VARCHAR(1000),
+    Rate INT CHECK (Rate >= 1 AND Rate <= 5),
+    Order_ID INT,
+    FOREIGN KEY (Order_ID) REFERENCES `Order`(Order_ID)
+);
+
+
+
+-- Relationships/Connections:
+-- Seller manages Product_AD
+-- Seller creates Product_Request
+-- Buyer selects Suggested_Product
+-- Zonal_Admin manages Seller
+-- Super_Admin manages Zonal_Admin
