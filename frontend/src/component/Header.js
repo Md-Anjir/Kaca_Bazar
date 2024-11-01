@@ -1,21 +1,55 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import logo from "../images/KacaBazarLogo.png";
 import { Link, useNavigate } from "react-router-dom";
 import seller from "../images/agent.png";
-import farmer from "../images/farmerlogo.png"
-export default function YourComponent() {
-  const [showCategories, setShowCategories] = useState(false);
+import farmer from "../images/farmerlogo.png";
+import profile from "../images/profile.png";
+import axios from 'axios'; // Make sure to import axios
 
-  const handleCategoriesClick = () => {
-    setShowCategories(!showCategories); // Toggle the categories visibility
-  };
+export default function Header() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [buyerInfo, setBuyerInfo] = useState(null);
+    const navigate = useNavigate();
+    const [showProfileDropdown, setShowProfileDropdown] = useState(false); // New state for profile dropdown
+
+    useEffect(() => {
+      const checkLoginStatus = async () => {
+        try {
+          const buyertoken = localStorage.getItem('buyertoken'); // Change from Buyer_ID to buyertoken
+          if (buyertoken) {
+            const response = await axios.get('http://localhost:3000/auth/buyerinfo', {
+              headers: { Authorization: `Bearer ${buyertoken}` }, // Include the buyertoken in the request headers
+            });
+            setBuyerInfo(response.data);
+            setIsLoggedIn(true);
+          }
+        } catch (error) {
+          console.error('Error fetching buyer info:', error);
+          setIsLoggedIn(false);
+        }
+      };
+      checkLoginStatus();
+    }, []);
+  
+    const handleLogout = () => {
+      localStorage.removeItem('buyertoken'); // Clear the buyertoken from local storage
+      console.log("Log out Succesfully!")
+      setIsLoggedIn(false);
+      setBuyerInfo(null);
+      navigate('/'); // Redirect to login page after logout
+    };
+
+    const handleProfileClick = () => {
+      setShowProfileDropdown(!showProfileDropdown); // Toggle the profile dropdown
+    };
+  
 
   return (
     <>
-      {/* component */}
+      {/* Header Component */}
       <div className="bg-white">
         <div className="border py-3 px-6">
-          <div className="flex justify-between padding: '0px'">
+          <div className="flex justify-between">
             <div className="flex items-center py-0 px-1">
               <Link to="/">
                 <img
@@ -74,7 +108,7 @@ export default function YourComponent() {
                 <span className="text-sm font-medium">Orders</span>
               </div>
 
-              <div className="flex cursor-pointer items-center gap-x-1 rounded-md py-2 px-4 hover:bg-gray-100">
+              <div  className="flex cursor-pointer items-center gap-x-1 rounded-md py-2 px-4 hover:bg-gray-100">
                 <div className="relative">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -90,11 +124,59 @@ export default function YourComponent() {
                 </div>
                 <span className="text-sm font-medium">Cart</span>
               </div>
-              <div className="ml-2 flex cursor-pointer items-center gap-x-1 rounded-md border py-2 px-4 hover:bg-gray-100">
-                <Link to="/login" className="text-blue-500">
-                  Login
-                </Link>
-              </div>
+
+              {/* Conditional rendering of Login or Profile icon */}
+              {isLoggedIn ? (
+                <div className="flex cursor-pointer items-center gap-x-1 rounded-md py-2 px-4 hover:bg-gray-100" style={{ position: 'relative' }}>
+                  <img
+                  src={profile}
+                  alt="Profile"
+                  style={{ width: "35px", height: "35px",cursor: 'pointer', padding: "0" }}
+                    
+                    onClick={handleProfileClick} // Toggle dropdown visibility
+                  />
+                  {showProfileDropdown && buyerInfo && ( // Show dropdown if it's visible and buyer info is available
+                    <div style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      backgroundColor: '#b5f8f1',
+                      boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)',
+                      position: 'absolute',
+                      top: '100%',
+                      right: '0',
+                      padding: '10px',
+                      minWidth: '260px',
+                      zIndex: '1',
+                    }}>
+                      <p  style={{ margin: '0', padding: '5px 0' }}><span style={{color: '#0010ad', fontSize: '18px' }}>Name: </span> {buyerInfo.Buyer_Name}</p>
+                      <p style={{ margin: '0', padding: '5px 0' }}><span style={{color: '#0010ad', fontSize: '18px' }}>Email: </span> {buyerInfo.Email}</p>
+                      <p style={{ margin: '0', padding: '5px 0' }}><span style={{color: '#0010ad', fontSize: '18px' }}> Phone Number: </span>{buyerInfo.Phone_Number}</p>
+                      <p style={{ margin: '0', padding: '5px 0' }}><span style={{color: '#0010ad', fontSize: '18px' }}>Address: </span>{buyerInfo.Address}</p>
+                      <button onClick={handleLogout} style={{
+                        marginTop: '10px',
+                        padding: '4px',
+                        backgroundColor: '#dc3545',
+                        color: '#fff',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        fontSize: '20px'
+                      }}>
+                        Logout
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Link to="/login" style={{
+                  padding: '8px 16px',
+                  backgroundColor: '#007bff',
+                  color: '#fff',
+                  borderRadius: '4px',
+                  textDecoration: 'none',
+                  fontSize: '20px'
+                }}>Login</Link>
+              )}
             </div>
           </div>
         </div>

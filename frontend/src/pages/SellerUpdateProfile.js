@@ -23,7 +23,7 @@ function SellerUpdateProfile() {
   }, []);
 
   const [values, setValues] = useState({
-    username: "",
+    name: "",
     email: "",
     password: "",
   });
@@ -89,15 +89,15 @@ function SellerUpdateProfile() {
                 <h2 className="text-lg font-bold mb-4">Update Profile</h2>
                 <form className="w-full" onSubmit={handleSubmit}>
                   <div className="mb-4">
-                    <label htmlFor="username" className="block text-gray-700">
-                      Username
+                    <label htmlFor="name" className="block text-gray-700">
+                      name
                     </label>
                     <input
                       type="text"
-                      placeholder="Enter New Username"
+                      placeholder="Enter New name"
                       className="w-full px-3 py-2 border"
-                      name="username"
-                      value={values.username}
+                      name="name"
+                      value={values.name}
                       onChange={handleChanges}
                     />
                   </div>

@@ -13,6 +13,9 @@ import SellerUpdateProfile from "./pages/SellerUpdateProfile"
 import SellerOrders from "./pages/SellerOrders"
 import FarmerLogin from "./pages/FarmerLogin"
 import FarmerRegister from "./pages/FarmerRegister"
+import Farmer from "./pages/Farmer"
+import FarmerUpdateProfile from "./pages/FarmerUpdateProfile"
+
 function App() {
   
   return (
@@ -32,6 +35,8 @@ function App() {
         <Route path="/seller/orders" element={<SellerOrders/>}></Route>
         <Route path="/farmerlogin" element={<FarmerLogin/>}></Route>
         <Route path="/farmerregister" element={<FarmerRegister/>}></Route>
+        <Route path="/farmer" element={<Farmer/>}></Route>
+        <Route path="/farmer/update-profile" element={<FarmerUpdateProfile/>}></Route>
 
       </Routes>
     </BrowserRouter>

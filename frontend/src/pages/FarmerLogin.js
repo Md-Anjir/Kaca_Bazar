@@ -31,6 +31,7 @@ function FarmerLogin() {
   };
 
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState(""); // State to store error message
 
   const handleSumbit = async (e) => {
     e.preventDefault();
@@ -41,11 +42,25 @@ function FarmerLogin() {
       );
       console.log(response);
       if (response.status === 200) {
-        localStorage.setItem("token", response.data.token);
+        const { farmertoken } = response.data; // Adjust to match your backend response
+        localStorage.setItem("farmertoken", response.data.farmertoken);
+        console.log(`Login successful! farmertoken: ${farmertoken}`);
         navigate("/farmer");
       }
     } catch (err) {
-      console.log(err.message);
+      if (err.response) {
+        // Check specific error messages from the server
+        if (err.response.status === 404) {
+          setErrorMessage("User not found"); // Set error for user not found
+        } else if (err.response.status === 401) {
+          setErrorMessage("Incorrect password"); // Set error for incorrect password
+        } else {
+          setErrorMessage("An error occurred. Please try again.");
+        }
+      } else {
+        console.log(err.message);
+        setErrorMessage("An error occurred. Please check your connection.");
+      }
     }
   };
 
@@ -55,14 +70,21 @@ function FarmerLogin() {
       <div className="flex-1 items-center">
         <div
           className="flex justify-center items-center p-4 flex-col md:flex-row py-9"
-          style={{ backgroundColor: "green", padding: "30px"}}
+          style={{ backgroundColor: "green", padding: "30px" }}
         >
           <div style={{ width: "50%", paddingRight: "20px" }}>
-            <h1 style={{ fontSize: isMobile ? "30px" : "48px", fontWeight: "bold", color: ""}}>
+            <h1
+              style={{
+                fontSize: isMobile ? "30px" : "48px",
+                fontWeight: "bold",
+                color: "",
+              }}
+            >
               Become A Kaca Bazar Farmer Today!
             </h1>
             <p style={{ fontSize: "20px", marginTop: "20px" }}>
-              Log in to your Kaca Bazar farmer account now and connect with buyers!
+              Log in to your Kaca Bazar farmer account now and connect with
+              buyers!
             </p>
             <img
               src={farmer}
@@ -109,8 +131,12 @@ function FarmerLogin() {
                     />
                   </div>
                   <button className="w-full bg-green-600 text-white py-2">
-                    Submit
+                    Login
                   </button>
+                  {errorMessage && (
+                    <p style={{ color: "red" }}>{errorMessage}</p>
+                  )}{" "}
+                  {/* Display error message */}
                 </form>
                 <div className="text-center mt-4">
                   <span>Don't have a farmer account?</span>

@@ -1,8 +1,48 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import logo from "../images/KacaBazarLogo.png";
 import seller from "../images/agent.png";
 
+import profile from "../images/profile.png";
+import axios from 'axios'; // Make sure to import axios
+
 export default function SellerHeader() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [sellerInfo, setsellerInfo] = useState(null);
+    const navigate = useNavigate();
+    const [showProfileDropdown, setShowProfileDropdown] = useState(false); // New state for profile dropdown
+
+    useEffect(() => {
+      const checkLoginStatus = async () => {
+        try {
+          const sellertoken = localStorage.getItem('sellertoken'); // Change from Buyer_ID to sellertoken
+          if (sellertoken) {
+            const response = await axios.get('http://localhost:3000/auth/sellerInfo', {
+              headers: { Authorization: `Bearer ${sellertoken}` }, // Include the sellertoken in the request headers
+            });
+            setsellerInfo(response.data);
+            setIsLoggedIn(true);
+          }
+        } catch (error) {
+          console.error('Error fetching buyer info:', error);
+          setIsLoggedIn(false);
+        }
+      };
+      checkLoginStatus();
+    }, []);
+  
+    const handleLogout = () => {
+      localStorage.removeItem('sellertoken'); // Clear the sellertoken from local storage
+      console.log("Log out Succesfully!")
+      setIsLoggedIn(false);
+      setsellerInfo(null);
+      navigate('/'); // Redirect to login page after logout
+    };
+
+    const handleProfileClick = () => {
+      setShowProfileDropdown(!showProfileDropdown); // Toggle the profile dropdown
+    };
+
   return (
     <>
       {/* Seller Header Component */}
@@ -87,11 +127,70 @@ export default function SellerHeader() {
               </div>
 
               {/* Logout */}
-              <div className="ml-2 flex cursor-pointer items-center gap-x-1 rounded-md border py-2 px-4 hover:bg-gray-100">
-                <Link to="/seller/logout" className="text-blue-500">
-                  Logout
-                </Link>
-              </div>
+              {isLoggedIn ? (
+                <div className="flex cursor-pointer items-center gap-x-1 rounded-md py-2 px-4 hover:bg-gray-100" style={{ position: 'relative' }}>
+                  <img
+                  src={profile}
+                  alt="Profile"
+                  style={{ width: "35px", height: "35px",cursor: 'pointer', padding: "0" }}
+                    
+                    onClick={handleProfileClick} // Toggle dropdown visibility
+                  />
+                  {showProfileDropdown && sellerInfo && ( // Show dropdown if it's visible and buyer info is available
+                    <div style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      backgroundColor: '#b5f8f1',
+                      boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)',
+                      position: 'absolute',
+                      top: '100%',
+                      right: '0',
+                      padding: '10px',
+                      minWidth: '260px',
+                      zIndex: '1',
+                    }}>
+                      <p  style={{ margin: '0', padding: '5px 0' }}><span style={{color: '#0010ad', fontSize: '18px' }}>Name: </span> {sellerInfo.Seller_Name}</p>
+                      <p style={{ margin: '0', padding: '5px 0' }}><span style={{color: '#0010ad', fontSize: '18px' }}>Email: </span> {sellerInfo.Email}</p>
+                      <p style={{ margin: '0', padding: '5px 0' }}><span style={{color: '#0010ad', fontSize: '18px' }}> Phone Number: </span>{sellerInfo.Phone_Number}</p>
+                      <p style={{ margin: '0', padding: '5px 0' }}><span style={{color: '#0010ad', fontSize: '18px' }}>Location: </span>{sellerInfo.Location_Name}</p>
+                      <button onClick={() => (window.location.href = "/seller/update-profile")} style={{
+                        marginTop: '10px',
+                        padding: '4px',
+                        backgroundColor: '#009e48',
+                        color: '#fff',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        fontSize: '17px'
+                      }}>
+                        Update Profile
+                      </button>
+                      <button onClick={handleLogout} style={{
+                        marginTop: '10px',
+                        padding: '4px',
+                        backgroundColor: '#009e48',
+                        color: '#fff',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        fontSize: '17px'
+                      }}>
+                        Logout
+                      </button>
+
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Link to="/login" style={{
+                  padding: '8px 16px',
+                  backgroundColor: '#007bff',
+                  color: '#fff',
+                  borderRadius: '4px',
+                  textDecoration: 'none',
+                  fontSize: '20px'
+                }}>Login</Link>
+              )}
             </div>
           </div>
         </div>

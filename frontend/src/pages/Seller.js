@@ -1,13 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import SellerHeader from "../component/SellerHeader";
 import Footer from "../component/Footer";
 import GifComponent from "../component/gif";
 
 function SellerHomePage() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if the seller is logged in by looking for a sellertoken or login status
+    const sellertoken = localStorage.getItem('sellertoken');
+    if (!sellertoken) {
+      // If no sellertoken, redirect to login
+      navigate("/sellerlogin");
+    }
+  }, [navigate]);
+
   return (
     <>
       <SellerHeader />
-      <GifComponent/>
+      <GifComponent />
       <div style={{ padding: "20px", maxWidth: "1200px", margin: "auto" }}>
         <h1 style={{ textAlign: "center", marginBottom: "20px", color: "green" }}>
           Seller Dashboard

@@ -10,7 +10,6 @@ import WhySell from "../component/WhySell";
 function SellerLogin() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
-  // Function to detect window size and adjust the layout for mobile or desktop
   const handleResize = () => {
     setIsMobile(window.innerWidth < 768);
   };
@@ -33,7 +32,9 @@ function SellerLogin() {
 
   const navigate = useNavigate();
 
-  const handleSumbit = async (e) => {
+  const [errorMessage, setErrorMessage] = useState(""); // State to store error message
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post(
@@ -42,11 +43,25 @@ function SellerLogin() {
       );
       console.log(response);
       if (response.status === 200) {
-        localStorage.setItem("token", response.data.token);
-        navigate("/seller");
+        const { sellertoken } = response.data;
+        localStorage.setItem("sellertoken", sellertoken); // Store the sellertoken
+        console.log(`Seller Login successful! sellertoken: ${sellertoken}`);
+        navigate("/seller"); // Navigate to the seller page
       }
     } catch (err) {
-      console.log(err.message);
+      if (err.response) {
+        // Check specific error messages from the server
+        if (err.response.status === 404) {
+          setErrorMessage("User not found"); // Set error for user not found
+        } else if (err.response.status === 401) {
+          setErrorMessage("Incorrect password"); // Set error for incorrect password
+        } else {
+          setErrorMessage("An error occurred. Please try again.");
+        }
+      } else {
+        console.log(err.message);
+        setErrorMessage("An error occurred. Please check your connection.");
+      }
     }
   };
 
@@ -59,7 +74,12 @@ function SellerLogin() {
           style={{ backgroundColor: "green" }}
         >
           <div style={{ width: "50%", paddingRight: "20px" }}>
-            <h1 style={{ fontSize: isMobile ? "30px" : "48px", fontWeight: "bold" }}>
+            <h1
+              style={{
+                fontSize: isMobile ? "30px" : "48px",
+                fontWeight: "bold",
+              }}
+            >
               Become A Kaca Bazar Seller Today!
             </h1>
             <p style={{ fontSize: "20px", marginTop: "20px" }}>
@@ -72,13 +92,11 @@ function SellerLogin() {
               style={{ marginTop: "50px", width: "150px" }}
             />
           </div>
-          {/* Set the container div width larger on medium and larger screens */}
           <div
-            className="shadow-lg px-8 py-5 border  w-full max-w-lg md:max-w-3xl"
+            className="shadow-lg px-8 py-5 border w-full max-w-lg md:max-w-3xl"
             style={{ backgroundColor: "white", borderRadius: "20px" }}
           >
             <div className="flex flex-col md:flex-row justify-center items-center">
-              {/* On smaller screens, image is placed above the form */}
               <img
                 style={{ width: "300px", height: "auto" }}
                 src={gif}
@@ -87,7 +105,7 @@ function SellerLogin() {
               />
               <div className="flex justify-center items-center flex-col w-full md:w-1/2">
                 <h2 className="text-lg font-bold mb-4">Login</h2>
-                <form className="w-full" onSubmit={handleSumbit}>
+                <form className="w-full" onSubmit={handleSubmit}>
                   <div className="mb-4">
                     <label htmlFor="email" className="block text-gray-700">
                       Email
@@ -98,6 +116,7 @@ function SellerLogin() {
                       className="w-full px-3 py-2 border"
                       name="email"
                       onChange={handleChanges}
+                      required
                     />
                   </div>
                   <div className="mb-4">
@@ -110,14 +129,19 @@ function SellerLogin() {
                       className="w-full px-3 py-2 border"
                       name="password"
                       onChange={handleChanges}
+                      required
                     />
                   </div>
                   <button className="w-full bg-green-600 text-white py-2">
-                    Submit
+                    Login
                   </button>
+                  {errorMessage && (
+                    <p style={{ color: "red" }}>{errorMessage}</p>
+                  )}{" "}
+                  {/* Display error message */}
                 </form>
                 <div className="text-center mt-4">
-                  <span>Don't have an seller account?</span>
+                  <span>Don't have a seller account?</span>
                   <Link to="/sellerregister" className="text-blue-500">
                     Sign Up
                   </Link>
