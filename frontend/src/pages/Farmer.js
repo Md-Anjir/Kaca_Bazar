@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import FarmerHeader from "../component/FarmerHeader";
 import Footer from "../component/Footer";
 import GifComponent from "../component/gif";
+import FarmerProductAd from "../component/FarmerProductAd";
+import FarmerPreviousAd from "../component/FarmerPreviousAd";
 
 function FarmerHomePage() {
   const navigate = useNavigate();
@@ -36,6 +38,9 @@ function FarmerHomePage() {
             below to navigate your dashboard and stay updated with your business on Kaca Bazar.
           </p>
         </section>
+        <FarmerPreviousAd/>
+
+        <FarmerProductAd/>
 
         {/* Action Links */}
         <section style={{ display: "flex", justifyContent: "space-around", marginBottom: "40px" }}>

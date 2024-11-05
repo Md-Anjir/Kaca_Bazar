@@ -2,6 +2,9 @@ import express from "express";
 import cors from 'cors';
 import authRouter from './routes/authRoutes.js';
 import locations from './routes/locations.js';
+import buyer from './routes/buyer.js';
+import farmer from './routes/farmer.js';
+import product from './routes/product.js';
 
 const app = express();
 app.use(cors());
@@ -19,6 +22,9 @@ const corsOptions = {
 // Register routes
 app.use('/auth', authRouter);
 app.use('/locations', locations);
+app.use('/product', product);
+app.use('/buyer', buyer)
+app.use('/farmer', farmer)
 
 app.get('/', (req, res) => {
     res.send('Hello, Server');
