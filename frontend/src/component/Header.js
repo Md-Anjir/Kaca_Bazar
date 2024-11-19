@@ -1,186 +1,278 @@
 import { useState, useEffect } from "react";
 import logo from "../images/KacaBazarLogo.png";
+import cart from "../images/cart.png";
+import orders from "../images/shopping-bag.png";
 import { Link, useNavigate } from "react-router-dom";
 import seller from "../images/agent.png";
 import farmer from "../images/farmerlogo.png";
 import profile from "../images/profile.png";
-import axios from 'axios'; // Make sure to import axios
+import axios from "axios";
+import { Menu, X } from "react-feather";
 
 export default function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [buyerInfo, setBuyerInfo] = useState(null);
-    const navigate = useNavigate();
-    const [showProfileDropdown, setShowProfileDropdown] = useState(false); // New state for profile dropdown
+  const [buyerInfo, setBuyerInfo] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [showSearchResults, setShowSearchResults] = useState(false);
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
-    useEffect(() => {
-      const checkLoginStatus = async () => {
-        try {
-          const buyertoken = localStorage.getItem('buyertoken'); // Change from Buyer_ID to buyertoken
-          if (buyertoken) {
-            const response = await axios.get('http://localhost:3000/auth/buyerinfo', {
-              headers: { Authorization: `Bearer ${buyertoken}` }, // Include the buyertoken in the request headers
-            });
-            setBuyerInfo(response.data);
-            setIsLoggedIn(true);
-          }
-        } catch (error) {
-          console.error('Error fetching buyer info:', error);
-          setIsLoggedIn(false);
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      try {
+        const buyertoken = localStorage.getItem("buyertoken");
+        if (buyertoken) {
+          const response = await axios.get(
+            "http://localhost:3000/auth/buyerinfo",
+            {
+              headers: { Authorization: `Bearer ${buyertoken}` },
+            }
+          );
+          setBuyerInfo(response.data);
+          setIsLoggedIn(true);
         }
-      };
-      checkLoginStatus();
-    }, []);
-  
-    const handleLogout = () => {
-      localStorage.removeItem('buyertoken'); // Clear the buyertoken from local storage
-      console.log("Log out Succesfully!")
-      setIsLoggedIn(false);
-      setBuyerInfo(null);
-      navigate('/'); // Redirect to login page after logout
+      } catch (error) {
+        console.error("Error fetching buyer info:", error);
+        setIsLoggedIn(false);
+      }
     };
+    checkLoginStatus();
+  }, []);
 
-    const handleProfileClick = () => {
-      setShowProfileDropdown(!showProfileDropdown); // Toggle the profile dropdown
-    };
-  
+  const handleLogout = () => {
+    localStorage.removeItem("buyertoken");
+    setIsLoggedIn(false);
+    setBuyerInfo(null);
+    navigate("/");
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleSearchChange = async (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    if (query.length > 2) {
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/buyer/search?query=${query}`
+        );
+        setSearchResults(response.data);
+        setShowSearchResults(true);
+      } catch (error) {
+        console.error("Error fetching search results:", error);
+      }
+    } else {
+      setShowSearchResults(false);
+    }
+  };
 
   return (
-    <>
-      {/* Header Component */}
-      <div className="bg-white">
-        <div className="border py-3 px-6">
-          <div className="flex justify-between">
-            <div className="flex items-center py-0 px-1">
-              <Link to="/">
-                <img
-                  src={logo}
-                  alt="Kacha Bazar Logo"
-                  style={{ width: "110px", height: "50px", padding: "0" }}
-                />
-              </Link>
-            </div>
-            <div className="ml-6 flex flex-1 gap-3">
-              <input
-                type="text"
-                className="w-full rounded-md border border-[#DDE2E4] px-3 py-2 text-sm"
-                defaultValue="Search On Kaca Bazar"
-              />
-            </div>
-            <div className="flex gap-x-2">
-              <div
-                className="flex cursor-pointer items-center gap-x-1 rounded-md py-2 px-4 hover:bg-gray-100"
-                onClick={() => (window.location.href = "/farmerlogin")}
-              >
-                <img
-                  src={farmer}
-                  alt="farmer"
-                  style={{ width: "30px", height: "30px", padding: "0" }}
-                />
-                <span className="text-sm font-medium">Become Farmer</span>
-              </div>
+    <div className="bg-white">
+      <div className="border py-3 px-6 flex justify-between items-center">
+        <Link to="/">
+          <img
+            src={logo}
+            alt="Kacha Bazar Logo"
+            style={{ width: "110px", height: "50px" }}
+          />
+        </Link>
 
-              <div
-                className="flex cursor-pointer items-center gap-x-1 rounded-md py-2 px-4 hover:bg-gray-100"
-                onClick={() => (window.location.href = "/sellerlogin")}
-              >
-                <img
-                  src={seller}
-                  alt="seller"
-                  style={{ width: "30px", height: "30px", padding: "0" }}
-                />
-                <span className="text-sm font-medium">Become Seller</span>
-              </div>
-
-              <div className="flex cursor-pointer items-center gap-x-1 rounded-md py-2 px-4 hover:bg-gray-100">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-gray-500"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z" />
-                  <path
-                    fillRule="evenodd"
-                    d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm5 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <span className="text-sm font-medium">Orders</span>
-              </div>
-
-              <div  className="flex cursor-pointer items-center gap-x-1 rounded-md py-2 px-4 hover:bg-gray-100">
-                <div className="relative">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5 text-gray-500"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
+        {/* Search Bar */}
+        <div className="ml-4 mr-4 flex flex-1 gap-3 relative">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            className="w-full rounded-md border px-3 py-2 text-sm"
+            placeholder="Search On Kaca Bazar"
+          />
+          {showSearchResults && (
+            <div className="absolute top-full mt-1 w-full bg-white border rounded-md shadow-lg max-h-60 overflow-auto">
+              {searchResults.length > 0 ? (
+                searchResults.map((product) => (
+                  <Link
+                    to={`/search/products/${product.Product_ID}`}
+                    key={product.Product_ID} // Ensure each item has a unique key
+                    className="block p-2 hover:bg-gray-100"
+                    onClick={() => setShowSearchResults(false)}
                   >
-                    <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
-                  </svg>
-                  <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 p-2 text-xs text-white">
-                    3
-                  </span>
-                </div>
-                <span className="text-sm font-medium">Cart</span>
-              </div>
-
-              {/* Conditional rendering of Login or Profile icon */}
-              {isLoggedIn ? (
-                <div className="flex cursor-pointer items-center gap-x-1 rounded-md py-2 px-4 hover:bg-gray-100" style={{ position: 'relative' }}>
-                  <img
-                  src={profile}
-                  alt="Profile"
-                  style={{ width: "35px", height: "35px",cursor: 'pointer', padding: "0" }}
-                    
-                    onClick={handleProfileClick} // Toggle dropdown visibility
-                  />
-                  {showProfileDropdown && buyerInfo && ( // Show dropdown if it's visible and buyer info is available
-                    <div style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      backgroundColor: '#b5f8f1',
-                      boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)',
-                      position: 'absolute',
-                      top: '100%',
-                      right: '0',
-                      padding: '10px',
-                      minWidth: '260px',
-                      zIndex: '1',
-                    }}>
-                      <p  style={{ margin: '0', padding: '5px 0' }}><span style={{color: '#0010ad', fontSize: '18px' }}>Name: </span> {buyerInfo.Buyer_Name}</p>
-                      <p style={{ margin: '0', padding: '5px 0' }}><span style={{color: '#0010ad', fontSize: '18px' }}>Email: </span> {buyerInfo.Email}</p>
-                      <p style={{ margin: '0', padding: '5px 0' }}><span style={{color: '#0010ad', fontSize: '18px' }}> Phone Number: </span>{buyerInfo.Phone_Number}</p>
-                      <p style={{ margin: '0', padding: '5px 0' }}><span style={{color: '#0010ad', fontSize: '18px' }}>Address: </span>{buyerInfo.Address}</p>
-                      <button onClick={handleLogout} style={{
-                        marginTop: '10px',
-                        padding: '4px',
-                        backgroundColor: '#dc3545',
-                        color: '#fff',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        fontSize: '20px'
-                      }}>
-                        Logout
-                      </button>
-                    </div>
-                  )}
-                </div>
+                    {product.Product_Name}
+                  </Link>
+                ))
               ) : (
-                <Link to="/login" style={{
-                  padding: '8px 16px',
-                  backgroundColor: '#007bff',
-                  color: '#fff',
-                  borderRadius: '4px',
-                  textDecoration: 'none',
-                  fontSize: '20px'
-                }}>Login</Link>
+                <div className="p-2 text-sm text-gray-500">
+                  No products found
+                </div>
               )}
             </div>
-          </div>
+          )}
+        </div>
+
+        {/* Mobile Menu Toggle */}
+        <div className="md:hidden">
+          {isMenuOpen ? (
+            <X onClick={toggleMenu} size={24} />
+          ) : (
+            <Menu onClick={toggleMenu} size={24} />
+          )}
+        </div>
+
+        {/* Desktop Menu */}
+        <div className="hidden md:flex gap-x-2 items-center">
+          <Link
+            to="/farmerlogin"
+            className="flex items-center gap-x-1 py-2 px-4 hover:bg-gray-100"
+          >
+            <img
+              src={farmer}
+              alt="farmer"
+              style={{ width: "30px", height: "30px" }}
+            />
+            <span className="text-sm font-medium">Become Farmer</span>
+          </Link>
+          <Link
+            to="/sellerlogin"
+            className="flex items-center gap-x-1 py-2 px-4 hover:bg-gray-100"
+          >
+            <img
+              src={seller}
+              alt="seller"
+              style={{ width: "30px", height: "30px" }}
+            />
+            <span className="text-sm font-medium">Become Seller</span>
+          </Link>
+          <Link
+            to="/orders"
+            className="flex items-center gap-x-1 py-2 px-4 hover:bg-gray-100"
+          >
+            <img
+              src={orders}
+              alt="Orders"
+              style={{ width: "30px", height: "30px" }}
+            />
+            <span className="text-sm font-medium">Orders</span>
+          </Link>
+          <Link
+            to="/cart"
+            className="flex items-center gap-x-1 py-2 px-4 hover:bg-gray-100"
+          >
+            <img
+              src={cart}
+              alt="Cart"
+              style={{ width: "30px", height: "30px" }}
+            />
+            <span className="text-sm font-medium">Cart</span>
+          </Link>
+          {isLoggedIn ? (
+            <div
+              className="flex items-center gap-x-1 py-2 px-4 hover:bg-gray-100 relative"
+              onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+            >
+              <img
+                src={profile}
+                alt="Profile"
+                style={{ width: "35px", height: "35px" }}
+              />
+              {showProfileDropdown && (
+                <div className="absolute right-0 mt-2 bg-white border rounded-lg shadow-lg p-4 z-10 top-12">
+                  <p>
+                    <span>Name:</span> {buyerInfo.Buyer_Name}
+                  </p>
+                  <p>
+                    <span>Email:</span> {buyerInfo.Email}
+                  </p>
+                  <p>
+                    <span>Phone:</span> {buyerInfo.Phone_Number}
+                  </p>
+                  <button onClick={handleLogout} className="text-red-600">
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link
+              to="/login"
+              className="text-white bg-blue-500 px-4 py-2 rounded-md"
+            >
+              Login
+            </Link>
+          )}
         </div>
       </div>
-    </>
+
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="md:hidden p-4 bg-gray-100">
+          <Link
+            to="/farmerlogin"
+            className="flex items-center gap-2 p-2 rounded-md"
+          >
+            <img
+              src={farmer}
+              alt="farmer"
+              style={{ width: "30px", height: "30px" }}
+            />
+            <span>Become Farmer</span>
+          </Link>
+          <Link
+            to="/sellerlogin"
+            className="flex items-center gap-2 p-2 rounded-md"
+          >
+            <img
+              src={seller}
+              alt="seller"
+              style={{ width: "30px", height: "30px" }}
+            />
+            <span>Become Seller</span>
+          </Link>
+          <Link to="/orders" className="flex items-center gap-2 p-2 rounded-md">
+            <img
+              src={orders}
+              alt="Orders"
+              style={{ width: "30px", height: "30px" }}
+            />
+            <span>Orders</span>
+          </Link>
+          <Link to="/cart" className="flex items-center gap-2 p-2 rounded-md">
+            <img
+              src={cart}
+              alt="Cart"
+              style={{ width: "30px", height: "30px" }}
+            />
+            <span>Cart</span>
+          </Link>
+          {isLoggedIn ? (
+            <div
+              className="flex items-center gap-2 p-2"
+              onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+            >
+              <img
+                src={profile}
+                alt="Profile"
+                style={{ width: "35px", height: "35px" }}
+              />
+              <div>
+                <p>{buyerInfo.Buyer_Name}</p>
+                <button onClick={handleLogout} className="text-red-600">
+                  Logout
+                </button>
+              </div>
+            </div>
+          ) : (
+            <Link
+              to="/login"
+              className="text-white bg-blue-500 px-4 py-2 rounded-md"
+            >
+              Login
+            </Link>
+          )}
+        </div>
+      )}
+    </div>
   );
 }

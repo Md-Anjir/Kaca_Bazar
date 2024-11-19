@@ -76,28 +76,28 @@ const Sidebar = () => {
           <ul>
             <li style={listItemStyle}>
               <a
-                href="/electronics"
+                href="/egg"
                 style={{ color: "#fff", textDecoration: "none" }}
               >
-                Electronics
+                Egg
               </a>
             </li>
             <li style={listItemStyle}>
               <a
-                href="/clothing"
+                href="/fish"
                 style={{ color: "#fff", textDecoration: "none" }}
               >
-                Clothing
+                Fish
               </a>
             </li>
             <li style={listItemStyle}>
-              <a href="/home" style={{ color: "#fff", textDecoration: "none" }}>
-                Home & Furniture
+              <a href="/chicken" style={{ color: "#fff", textDecoration: "none" }}>
+                Chicken
               </a>
             </li>
             <li style={listItemStyle}>
-              <a href="/toys" style={{ color: "#fff", textDecoration: "none" }}>
-                Toys
+              <a href="/vegitable" style={{ color: "#fff", textDecoration: "none" }}>
+                vegitable
               </a>
             </li>
           </ul>

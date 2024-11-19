@@ -84,7 +84,7 @@ function SellerRegister() {
             <img
               src={shoppingcart}
               alt="Shopping Cart"
-              style={{ marginTop: "50px", width: "150px" }}
+              style={{ marginTop: "50px", width: "230px" }}
             />
           </div>
 

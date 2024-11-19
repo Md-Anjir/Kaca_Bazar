@@ -89,7 +89,7 @@ function SellerLogin() {
             <img
               src={shoppingcart}
               alt="Shopping Cart"
-              style={{ marginTop: "50px", width: "150px" }}
+              style={{ marginTop: "50px", width: "190px" }}
             />
           </div>
           <div

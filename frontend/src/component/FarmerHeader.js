@@ -61,13 +61,13 @@ export default function FarmerHeader() {
             </div>
 
             {/* Search Bar */}
-            <div className="ml-6 flex flex-1 gap-3">
+            {/* <div className="ml-6 flex flex-1 gap-3">
               <input
                 type="text"
                 className="w-full rounded-md border border-[#DDE2E4] px-3 py-2 text-sm"
                 placeholder="Search on Kaca Bazar"
               />
-            </div>
+            </div> */}
 
             {/* farmer Links */}
             <div className="flex gap-x-2">
@@ -89,7 +89,7 @@ export default function FarmerHeader() {
               {/* Orders */}
               <div
                 className="flex cursor-pointer items-center gap-x-1 rounded-md py-2 px-4 hover:bg-gray-100"
-                onClick={() => (window.location.href = "/farmer/orders")}
+                onClick={() => (window.location.href = "/farmer/product-ad")}
               >
                 <div className="relative">
                   <svg
@@ -100,9 +100,6 @@ export default function FarmerHeader() {
                   >
                     <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
                   </svg>
-                  <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 p-2 text-xs text-white">
-                    5
-                  </span>
                 </div>
                 <span className="text-sm font-medium">Ad Product</span>
               </div>

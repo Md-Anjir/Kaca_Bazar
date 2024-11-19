@@ -4,6 +4,7 @@ import authRouter from './routes/authRoutes.js';
 import locations from './routes/locations.js';
 import buyer from './routes/buyer.js';
 import farmer from './routes/farmer.js';
+import seller from './routes/seller.js';
 import product from './routes/product.js';
 
 const app = express();
@@ -25,6 +26,7 @@ app.use('/locations', locations);
 app.use('/product', product);
 app.use('/buyer', buyer)
 app.use('/farmer', farmer)
+app.use('/seller', seller)
 
 app.get('/', (req, res) => {
     res.send('Hello, Server');

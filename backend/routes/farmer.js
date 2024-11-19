@@ -68,45 +68,25 @@ const authenticateFarmer = (req, res, next) => {
     }
 });
 
-// router.get("/ads", authenticateFarmer, async(req, res) => {
-//     // const db = await connectToDatabase();
-//     // const sql = "SELECT * FROM farmer_product_ads WHERE Farmer_ID = ?";
-//     // db.query(sql, [req.farmerId], (err, results) => {
-//     //   if (err) return res.status(500).json({ error: "Failed to fetch ads." });
-//     //   res.json(results);
-//     // });
-//   });
+
 
 router.get("/ads", authenticateFarmer, async (req, res) => {
-    try {
-        const db = await connectToDatabase();
-        const sql = "SELECT * FROM farmer_product_ads WHERE Farmer_ID = ?";
-        const [results] = await db.query(sql, [req.farmerId]);
-        
-        return res.status(200).json(results);
-    } catch (err) {
-        console.error("Database query error:", err);
-        return res.status(500).json({ error: "Failed to fetch ads", message: err.message });
-    }
+  try {
+      const db = await connectToDatabase();
+      const sql = `
+          SELECT ads.*, products.Product_Name
+          FROM farmer_product_ads AS ads
+          JOIN product_list AS products ON ads.Product_ID = products.Product_ID
+          WHERE ads.Farmer_ID = ?
+      `;
+      const [results] = await db.query(sql, [req.farmerId]);
+      
+      return res.status(200).json(results);
+  } catch (err) {
+      console.error("Database query error:", err);
+      return res.status(500).json({ error: "Failed to fetch ads", message: err.message });
+  }
 });
-  
-// router.delete("/ad/:id", authenticateFarmer, async (req, res) => {
-//     const db = await connectToDatabase();
-//     const { id } = req.params;
-
-//     const checkSql = "SELECT * FROM farmer_product_ads WHERE Farmer_Product_AD_ID = ? AND Farmer_ID = ?";
-//     db.query(checkSql, [id, req.farmerId], (err, result) => {
-//         if (err) return res.status(500).json({ success: false, message: "Failed to verify ad ownership" });
-//         if (result.length === 0) return res.status(404).json({ success: false, message: "Ad not found or unauthorized" });
-
-//         const deleteSql = "DELETE FROM farmer_product_ads WHERE Farmer_Product_AD_ID = ?";
-//         db.query(deleteSql, [id], (err) => {
-//             if (err) return res.status(500).json({ success: false, message: "Failed to delete ad" });
-//             res.json({ success: true, message: "Ad deleted successfully" });
-//         });
-//     });
-// });
-  
 
 
 // DELETE endpoint to remove a specific ad
@@ -129,41 +109,4 @@ router.delete('/ad/:id', authenticateFarmer, async (req, res) => {
 });
 
 
-
-router.get('/product-ads', async (req, res) => {
-    const category = req.query.category;
-    console.log("Category received:", category);
-  
-    if (!category) {
-      return res.status(400).json({ message: 'Category is required' });
-    }
-  
-    try {
-      const connection = await connectToDatabase();
-      const [rows] = await connection.query(
-        `
-          SELECT 
-        pa.Product_AD_ID, 
-        pa.Stock, 
-        pa.Unit_Name, 
-        pa.Minimum_Order_Quantity, 
-        pa.Unit_Price, 
-        pa.Delivery_Date, 
-        pa.Description, 
-        pl.Product_Name
-    FROM product_ad pa
-    JOIN product_list pl ON pa.Product_ID = pl.Product_ID
-    WHERE pl.Category = ?
-        `,
-        [category]
-      );
-  
-    //   await connection.release();
-      res.json(rows);
-      
-    } catch (error) {
-      console.error('Error retrieving product ads:', error);
-      res.status(500).json({ message: 'Error retrieving product ads' });
-    }
-  });
 export default router;
