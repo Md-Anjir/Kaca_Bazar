@@ -109,4 +109,23 @@ router.delete('/ad/:id', authenticateFarmer, async (req, res) => {
 });
 
 
+
+// Update ad status (on/off)
+router.patch("/ad/status/:id", async(req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+  const db = await connectToDatabase();
+
+  const sql = "UPDATE farmer_product_ads SET Status = ? WHERE Farmer_Product_AD_ID = ?";
+  db.query(sql, [status, id], (err, result) => {
+    if (err) {
+      console.error("Error updating ad status:", err);
+      return res.status(500).json({ error: "Failed to update ad status." });
+    }
+    res.status(200).json({ message: "Ad status updated successfully." });
+  });
+});
+
+
+
 export default router;

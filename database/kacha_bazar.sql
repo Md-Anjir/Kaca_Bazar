@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 19, 2024 at 04:15 PM
+-- Generation Time: Nov 21, 2024 at 05:16 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -79,7 +79,8 @@ CREATE TABLE `farmer` (
 --
 
 INSERT INTO `farmer` (`Farmer_ID`, `Farmer_Name`, `Phone_Number`, `Email`, `Password`, `Rating`, `Location_ID`, `Address`) VALUES
-(2, 'Md. Anjir Hossain', '01738851118', 'mdanjir3734@gmail.com', '$2b$10$FdZ3RHGIaFlw8FM28hM19e0Lsito/f/u7GMcgvBfw9Y9hVdhw4Huq', NULL, 1, 'Shiromoni, Khulna');
+(2, 'Md. Anjir Hossain', '01738851118', 'mdanjir3734@gmail.com', '$2b$10$FdZ3RHGIaFlw8FM28hM19e0Lsito/f/u7GMcgvBfw9Y9hVdhw4Huq', NULL, 1, 'Shiromoni, Khulna'),
+(3, 'anamul', '01745837028', 'anamul@gmail.com', '$2b$10$qReUY9Xy3.nortKZhsY1KOWM2zre3zUJdSHV2LMllchvF4kFZDFlC', NULL, 6, 'meherpur');
 
 -- --------------------------------------------------------
 
@@ -98,38 +99,40 @@ CREATE TABLE `farmer_product_ads` (
   `Phone_Number` varchar(20) NOT NULL,
   `Description` varchar(1000) DEFAULT NULL,
   `Picture_URL` varchar(255) DEFAULT NULL,
-  `Created_Date` date NOT NULL DEFAULT curdate()
+  `Created_Date` date NOT NULL DEFAULT curdate(),
+  `Status` enum('on','off') NOT NULL DEFAULT 'on'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `farmer_product_ads`
 --
 
-INSERT INTO `farmer_product_ads` (`Farmer_Product_AD_ID`, `Farmer_ID`, `Product_ID`, `Unit_Name`, `Minimum_Order_Quantity`, `Unit_Price`, `Delivery_Date`, `Phone_Number`, `Description`, `Picture_URL`, `Created_Date`) VALUES
-(8, 2, 2, 'KG', 48, 200.00, '2024-11-10', '01871352780', 'fresh catla', 'F:\\Kaca Bazar\\frontend\\src\\images', '2024-11-05'),
-(10, 2, 3, 'KG', 20, 500.00, '2024-11-08', '01738851118', 'desi', '\"F:\\Kaca Bazar\\frontend\\src\\images\\chicken.png\"', '2024-11-05'),
-(11, 2, 3, 'KG', 20, 500.00, '2024-11-08', '01738851118', 'desi', '\"F:\\Kaca Bazar\\frontend\\src\\images\\chicken.png\"', '2024-11-05'),
-(12, 2, 3, 'KG', 20, 500.00, '2024-11-08', '01738851118', 'desi', '\"F:\\Kaca Bazar\\frontend\\src\\images\\chicken.png\"', '2024-11-05'),
-(13, 2, 3, 'KG', 20, 500.00, '2024-11-08', '01738851118', 'desi', '\"F:\\Kaca Bazar\\frontend\\src\\images\\chicken.png\"', '2024-11-05'),
-(14, 2, 3, 'KG', 20, 500.00, '2024-11-08', '01738851118', 'desi', '\"F:\\Kaca Bazar\\frontend\\src\\images\\chicken.png\"', '2024-11-05'),
-(15, 2, 4, 'KG', 50, 10.00, '2024-11-13', '01914325908', 'vjbbkjb', '', '2024-11-05'),
-(16, 2, 4, 'KG', 50, 10.00, '2024-11-13', '01914325908', 'vjbbkjb', '', '2024-11-05'),
-(17, 2, 4, 'KG', 50, 10.00, '2024-11-13', '01914325908', 'vjbbkjb', '', '2024-11-05'),
-(18, 2, 5, 'KG', 30, 10.00, '2024-11-13', '01914325908', 'vjbbkjb', '', '2024-11-05'),
-(19, 2, 4, 'KG', 50, 10.00, '2024-11-13', '01914325908', 'vjbbkjb', '', '2024-11-05'),
-(20, 2, 5, 'KG', 30, 10.00, '2024-11-13', '01914325908', 'vjbbkjb', '', '2024-11-05'),
-(21, 2, 1, 'piece', 1, 23.00, '2024-11-06', '01738851118', 'egg', 'F:\\Kaca Bazar\\frontend\\src\\images', '2024-11-05'),
-(22, 2, 1, 'piece', 1, 23.00, '2024-11-06', '01738851118', 'egg', 'F:\\Kaca Bazar\\frontend\\src\\images', '2024-11-05'),
-(23, 2, 1, 'piece', 1, 23.00, '2024-11-06', '01738851118', 'egg', 'F:\\Kaca Bazar\\frontend\\src\\images', '2024-11-05'),
-(24, 2, 5, 'KG', 32, 45.00, '2024-11-11', '01738851110', 'rqrq', '', '2024-11-05'),
-(25, 2, 1, 'piece', 43, 4.00, '2024-11-07', '01871352780', 'q4', '', '2024-11-05'),
-(26, 2, 1, 'piece', 43, 4.00, '2024-11-07', '01871352780', 'q4', '', '2024-11-05'),
-(27, 2, 2, 'piece', 424, 324.00, '2024-11-15', '01738851118', 'afdagz', 'F:\\Kaca Bazar\\frontend\\src\\images', '2024-11-05'),
-(28, 2, 5, 'KG', 424, 233.00, '2024-11-13', '01871352780', 'ffafdga', 'affag', '2024-11-05'),
-(29, 2, 2, 'KG', 4444, 1431.00, '2024-11-14', '01738851118', 'gaarah', 'ahrhr', '2024-11-05'),
-(30, 2, 5, 'KG', 321, 44.00, '2024-11-20', '01871352780', 'rqrq', '', '2024-11-05'),
-(31, 2, 5, 'KG', 323, 414.00, '2024-11-07', '01871352780', 'aggag', '', '2024-11-05'),
-(32, 2, 1, 'piece', 323, 414.00, '2024-11-07', '01738851118', 'aggag', '', '2024-11-05');
+INSERT INTO `farmer_product_ads` (`Farmer_Product_AD_ID`, `Farmer_ID`, `Product_ID`, `Unit_Name`, `Minimum_Order_Quantity`, `Unit_Price`, `Delivery_Date`, `Phone_Number`, `Description`, `Picture_URL`, `Created_Date`, `Status`) VALUES
+(8, 2, 2, 'KG', 48, 200.00, '2024-11-10', '01871352780', 'fresh catla', 'F:\\Kaca Bazar\\frontend\\src\\images', '2024-11-05', 'on'),
+(10, 2, 3, 'KG', 20, 500.00, '2024-11-08', '01738851118', 'desi', '\"F:\\Kaca Bazar\\frontend\\src\\images\\chicken.png\"', '2024-11-05', 'on'),
+(11, 2, 3, 'KG', 20, 500.00, '2024-11-08', '01738851118', 'desi', '\"F:\\Kaca Bazar\\frontend\\src\\images\\chicken.png\"', '2024-11-05', 'on'),
+(12, 3, 3, 'KG', 20, 500.00, '2024-11-08', '01738851118', 'desi', '\"F:\\Kaca Bazar\\frontend\\src\\images\\chicken.png\"', '2024-11-05', 'on'),
+(13, 3, 3, 'KG', 20, 500.00, '2024-11-08', '01738851118', 'desi', '\"F:\\Kaca Bazar\\frontend\\src\\images\\chicken.png\"', '2024-11-05', 'on'),
+(14, 2, 3, 'KG', 20, 500.00, '2024-11-08', '01738851118', 'desi', '\"F:\\Kaca Bazar\\frontend\\src\\images\\chicken.png\"', '2024-11-05', 'on'),
+(15, 2, 4, 'KG', 50, 10.00, '2024-11-13', '01914325908', 'vjbbkjb', '', '2024-11-05', 'on'),
+(16, 2, 4, 'KG', 50, 10.00, '2024-11-13', '01914325908', 'vjbbkjb', '', '2024-11-05', 'on'),
+(17, 2, 4, 'KG', 50, 10.00, '2024-11-13', '01914325908', 'vjbbkjb', '', '2024-11-05', 'on'),
+(18, 2, 5, 'KG', 30, 10.00, '2024-11-13', '01914325908', 'vjbbkjb', '', '2024-11-05', 'on'),
+(19, 2, 4, 'KG', 50, 10.00, '2024-11-13', '01914325908', 'vjbbkjb', '', '2024-11-05', 'on'),
+(20, 2, 5, 'KG', 30, 10.00, '2024-11-13', '01914325908', 'vjbbkjb', '', '2024-11-05', 'on'),
+(21, 2, 1, 'piece', 1, 23.00, '2024-11-06', '01738851118', 'egg', 'F:\\Kaca Bazar\\frontend\\src\\images', '2024-11-05', 'on'),
+(22, 2, 1, 'piece', 1, 23.00, '2024-11-06', '01738851118', 'egg', 'F:\\Kaca Bazar\\frontend\\src\\images', '2024-11-05', 'on'),
+(23, 2, 1, 'piece', 1, 23.00, '2024-11-06', '01738851118', 'egg', 'F:\\Kaca Bazar\\frontend\\src\\images', '2024-11-05', 'on'),
+(24, 2, 5, 'KG', 32, 45.00, '2024-11-11', '01738851110', 'rqrq', '', '2024-11-05', 'on'),
+(25, 2, 1, 'piece', 43, 4.00, '2024-11-07', '01871352780', 'q4', '', '2024-11-05', 'on'),
+(26, 2, 1, 'piece', 43, 4.00, '2024-11-07', '01871352780', 'q4', '', '2024-11-05', 'on'),
+(27, 2, 2, 'piece', 424, 324.00, '2024-11-15', '01738851118', 'afdagz', 'F:\\Kaca Bazar\\frontend\\src\\images', '2024-11-05', 'on'),
+(28, 2, 5, 'KG', 424, 233.00, '2024-11-13', '01871352780', 'ffafdga', 'affag', '2024-11-05', 'on'),
+(29, 2, 2, 'KG', 4444, 1431.00, '2024-11-14', '01738851118', 'gaarah', 'ahrhr', '2024-11-05', 'on'),
+(30, 2, 5, 'KG', 321, 44.00, '2024-11-20', '01871352780', 'rqrq', '', '2024-11-05', 'on'),
+(31, 2, 5, 'KG', 323, 414.00, '2024-11-07', '01871352780', 'aggag', '', '2024-11-05', 'on'),
+(32, 2, 1, 'piece', 323, 414.00, '2024-11-07', '01738851118', 'aggag', '', '2024-11-05', 'on'),
+(33, 3, 2, 'KG', 100, 198.00, '2024-11-29', '01745837028', 'Fresh Fish', 'j', '2024-11-20', 'on');
 
 -- --------------------------------------------------------
 
@@ -335,48 +338,49 @@ CREATE TABLE `seller_product_ads` (
   `Stock` int(11) NOT NULL,
   `Description` varchar(1000) DEFAULT NULL,
   `Picture_URL` varchar(255) DEFAULT NULL,
-  `Created_Date` date NOT NULL DEFAULT curdate()
+  `Created_Date` date NOT NULL DEFAULT curdate(),
+  `Status` enum('on','off') NOT NULL DEFAULT 'on'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `seller_product_ads`
 --
 
-INSERT INTO `seller_product_ads` (`Seller_Product_AD_ID`, `Seller_ID`, `Product_ID`, `Unit_Name`, `Unit_Price`, `Stock`, `Description`, `Picture_URL`, `Created_Date`) VALUES
-(82, 1, 1, 'piece', 0.20, 500, 'Fresh Desi Chicken Eggs from free-range hens.', 'https://example.com/images/desi-chicken-egg.jpg', '2024-11-05'),
-(83, 1, 2, 'KG', 5.50, 200, 'Catla Fish, fresh from the river.', 'https://example.com/images/catla-fish.jpg', '2024-11-05'),
-(84, 1, 4, 'KG', 1.20, 300, 'Organic potatoes grown without pesticides.', 'https://example.com/images/potato.jpg', '2024-11-05'),
-(85, 3, 6, 'KG', 1.00, 400, 'High-quality Basmati Rice with a fragrant aroma.', 'https://example.com/images/basmati-rice.jpg', '2024-11-05'),
-(86, 1, 10, 'piece', 0.15, 300, 'Quail Eggs, rich in nutrients and perfect for gourmet dishes.', 'https://example.com/images/quail-egg.jpg', '2024-11-05'),
-(87, 3, 11, 'piece', 0.25, 400, 'Brown Eggs from healthy, free-range chickens.', 'https://example.com/images/brown-egg.jpg', '2024-11-05'),
-(88, 1, 12, 'KG', 6.00, 180, 'Rohu Fish, sustainably sourced and fresh.', 'https://example.com/images/rohu-fish.jpg', '2024-11-05'),
-(89, 1, 14, 'KG', 1.50, 350, 'Spinach, freshly harvested and packed with vitamins.', 'https://example.com/images/spinach.jpg', '2024-11-05'),
-(90, 1, 15, 'KG', 4.50, 120, 'Broiler Chicken, raised in a healthy environment.', 'https://example.com/images/broiler-chicken.jpg', '2024-11-05'),
-(91, 1, 16, 'KG', 5.00, 100, 'Layer Chicken, excellent for egg production.', 'https://example.com/images/layer-chicken.jpg', '2024-11-05'),
-(92, 1, 19, 'KG', 1.25, 240, 'Tomatoes, ripe and juicy, perfect for salads and sauces.', 'https://example.com/images/fresh-tomatoes.jpg', '2024-11-05'),
-(93, 1, 20, 'KG', 1.20, 250, 'Carrots, crunchy and fresh, ideal for snacks and cooking.', 'https://example.com/images/carrot.jpg', '2024-11-05'),
-(94, 2, 3, 'KG', 4.00, 100, 'Organic Desi Chicken, raised locally.', 'https://example.com/images/desi-chicken.jpg', '2024-11-05'),
-(95, 2, 18, 'KG', 1.10, 250, 'Fresh tomatoes, ripe and juicy.', 'https://example.com/images/tomato.jpg', '2024-11-05'),
-(96, 2, 22, 'KG', 0.80, 200, 'Locally grown bananas, perfect for snacking.', 'https://example.com/images/banana.jpg', '2024-11-05'),
-(97, 3, 4, 'KG', 1.10, 280, 'Fresh Vegetables, including potatoes, onions, and more.', 'https://example.com/images/fresh-vegetables.jpg', '2024-11-05'),
-(98, 2, 5, 'KG', 2.00, 200, 'Assorted Fruits, including apples, mangoes, and bananas.', 'https://example.com/images/assorted-fruits.jpg', '2024-11-05'),
-(99, 3, 7, 'KG', 9.50, 60, 'Premium Lamb, tender and flavorful.', 'https://example.com/images/lamb.jpg', '2024-11-05'),
-(100, 2, 8, 'KG', 2.80, 170, 'Chili Powder, perfect for adding heat to your dishes.', 'https://example.com/images/chili-powder.jpg', '2024-11-05'),
-(101, 3, 13, 'KG', 7.00, 140, 'Tilapia Fish, fresh and high in protein.', 'https://example.com/images/tilapia-fish.jpg', '2024-11-05'),
-(102, 2, 17, 'KG', 5.50, 90, 'Organic Chicken, free from antibiotics and hormones.', 'https://example.com/images/organic-chicken.jpg', '2024-11-05'),
-(103, 2, 21, 'KG', 1.35, 220, 'Potatoes, versatile for various cooking methods.', 'https://example.com/images/potatoes.jpg', '2024-11-05'),
-(104, 3, 23, 'KG', 0.90, 210, 'Apples, crisp and sweet, perfect for snacking.', 'https://example.com/images/apple.jpg', '2024-11-05'),
-(105, 2, 24, 'KG', 1.60, 190, 'Mangoes, juicy and ripe, ideal for desserts and smoothies.', 'https://example.com/images/mango.jpg', '2024-11-05'),
-(106, 2, 25, 'KG', 1.50, 180, 'Papayas, rich in vitamins and perfect for a healthy diet.', 'https://example.com/images/papaya.jpg', '2024-11-05'),
-(107, 2, 26, 'KG', 1.20, 300, 'Jasmine Rice, fragrant and perfect for a variety of dishes.', 'https://example.com/images/jasmine-rice.jpg', '2024-11-05'),
-(108, 2, 27, 'KG', 1.10, 320, 'Brown Rice, a healthy alternative with more fiber.', 'https://example.com/images/brown-rice.jpg', '2024-11-05'),
-(109, 1, 28, 'KG', 1.30, 310, 'White Rice, versatile and a staple in many cuisines.', 'https://example.com/images/white-rice.jpg', '2024-11-05'),
-(110, 2, 29, 'KG', 10.50, 55, 'Beef, high-quality and perfect for steaks and roasts.', 'https://example.com/images/beef.jpg', '2024-11-05'),
-(111, 2, 30, 'KG', 12.00, 45, 'Lamb, tender and flavorful, ideal for special occasions.', 'https://example.com/images/lamb.jpg', '2024-11-05'),
-(112, 2, 31, 'KG', 11.00, 50, 'Mutton, rich in flavor and perfect for hearty dishes.', 'https://example.com/images/mutton.jpg', '2024-11-05'),
-(113, 3, 32, 'KG', 8.00, 70, 'Pork, versatile and great for a variety of recipes.', 'https://example.com/images/pork.jpg', '2024-11-05'),
-(114, 1, 34, 'KG', 2.60, 160, 'Cumin Powder, essential for adding depth to your recipes.', 'https://example.com/images/cumin-powder.jpg', '2024-11-05'),
-(115, 1, 35, 'KG', 3.00, 150, 'Chili Powder, perfect for spicy dishes and seasoning.', 'https://example.com/images/chili-powder.jpg', '2024-11-05');
+INSERT INTO `seller_product_ads` (`Seller_Product_AD_ID`, `Seller_ID`, `Product_ID`, `Unit_Name`, `Unit_Price`, `Stock`, `Description`, `Picture_URL`, `Created_Date`, `Status`) VALUES
+(82, 1, 1, 'piece', 0.20, 500, 'Fresh Desi Chicken Eggs from free-range hens.', 'https://example.com/images/desi-chicken-egg.jpg', '2024-11-05', 'on'),
+(83, 1, 2, 'KG', 5.50, 200, 'Catla Fish, fresh from the river.', 'https://example.com/images/catla-fish.jpg', '2024-11-05', 'on'),
+(84, 1, 4, 'KG', 1.20, 300, 'Organic potatoes grown without pesticides.', 'https://example.com/images/potato.jpg', '2024-11-05', 'on'),
+(85, 3, 6, 'KG', 1.00, 400, 'High-quality Basmati Rice with a fragrant aroma.', 'https://example.com/images/basmati-rice.jpg', '2024-11-05', 'on'),
+(86, 1, 10, 'piece', 0.15, 300, 'Quail Eggs, rich in nutrients and perfect for gourmet dishes.', 'https://example.com/images/quail-egg.jpg', '2024-11-05', 'on'),
+(87, 3, 11, 'piece', 0.25, 400, 'Brown Eggs from healthy, free-range chickens.', 'https://example.com/images/brown-egg.jpg', '2024-11-05', 'on'),
+(88, 1, 12, 'KG', 6.00, 180, 'Rohu Fish, sustainably sourced and fresh.', 'https://example.com/images/rohu-fish.jpg', '2024-11-05', 'on'),
+(89, 1, 14, 'KG', 1.50, 350, 'Spinach, freshly harvested and packed with vitamins.', 'https://example.com/images/spinach.jpg', '2024-11-05', 'on'),
+(90, 1, 15, 'KG', 4.50, 120, 'Broiler Chicken, raised in a healthy environment.', 'https://example.com/images/broiler-chicken.jpg', '2024-11-05', 'on'),
+(91, 1, 16, 'KG', 5.00, 100, 'Layer Chicken, excellent for egg production.', 'https://example.com/images/layer-chicken.jpg', '2024-11-05', 'on'),
+(92, 1, 19, 'KG', 1.25, 240, 'Tomatoes, ripe and juicy, perfect for salads and sauces.', 'https://example.com/images/fresh-tomatoes.jpg', '2024-11-05', 'on'),
+(93, 1, 20, 'KG', 1.20, 250, 'Carrots, crunchy and fresh, ideal for snacks and cooking.', 'https://example.com/images/carrot.jpg', '2024-11-05', 'on'),
+(94, 2, 3, 'KG', 4.00, 100, 'Organic Desi Chicken, raised locally.', 'https://example.com/images/desi-chicken.jpg', '2024-11-05', 'on'),
+(95, 2, 18, 'KG', 1.10, 250, 'Fresh tomatoes, ripe and juicy.', 'https://example.com/images/tomato.jpg', '2024-11-05', 'on'),
+(96, 2, 22, 'KG', 0.80, 200, 'Locally grown bananas, perfect for snacking.', 'https://example.com/images/banana.jpg', '2024-11-05', 'on'),
+(97, 3, 4, 'KG', 1.10, 280, 'Fresh Vegetables, including potatoes, onions, and more.', 'https://example.com/images/fresh-vegetables.jpg', '2024-11-05', 'on'),
+(98, 2, 5, 'KG', 2.00, 200, 'Assorted Fruits, including apples, mangoes, and bananas.', 'https://example.com/images/assorted-fruits.jpg', '2024-11-05', 'on'),
+(99, 3, 7, 'KG', 9.50, 60, 'Premium Lamb, tender and flavorful.', 'https://example.com/images/lamb.jpg', '2024-11-05', 'on'),
+(100, 2, 8, 'KG', 2.80, 170, 'Chili Powder, perfect for adding heat to your dishes.', 'https://example.com/images/chili-powder.jpg', '2024-11-05', 'on'),
+(101, 3, 13, 'KG', 7.00, 140, 'Tilapia Fish, fresh and high in protein.', 'https://example.com/images/tilapia-fish.jpg', '2024-11-05', 'on'),
+(102, 2, 17, 'KG', 5.50, 90, 'Organic Chicken, free from antibiotics and hormones.', 'https://example.com/images/organic-chicken.jpg', '2024-11-05', 'on'),
+(103, 2, 21, 'KG', 1.35, 220, 'Potatoes, versatile for various cooking methods.', 'https://example.com/images/potatoes.jpg', '2024-11-05', 'on'),
+(104, 3, 23, 'KG', 0.90, 210, 'Apples, crisp and sweet, perfect for snacking.', 'https://example.com/images/apple.jpg', '2024-11-05', 'on'),
+(105, 2, 24, 'KG', 1.60, 190, 'Mangoes, juicy and ripe, ideal for desserts and smoothies.', 'https://example.com/images/mango.jpg', '2024-11-05', 'on'),
+(106, 2, 25, 'KG', 1.50, 180, 'Papayas, rich in vitamins and perfect for a healthy diet.', 'https://example.com/images/papaya.jpg', '2024-11-05', 'on'),
+(107, 2, 26, 'KG', 1.20, 300, 'Jasmine Rice, fragrant and perfect for a variety of dishes.', 'https://example.com/images/jasmine-rice.jpg', '2024-11-05', 'on'),
+(108, 2, 27, 'KG', 1.10, 320, 'Brown Rice, a healthy alternative with more fiber.', 'https://example.com/images/brown-rice.jpg', '2024-11-05', 'on'),
+(109, 1, 28, 'KG', 1.30, 310, 'White Rice, versatile and a staple in many cuisines.', 'https://example.com/images/white-rice.jpg', '2024-11-05', 'on'),
+(110, 2, 29, 'KG', 10.50, 55, 'Beef, high-quality and perfect for steaks and roasts.', 'https://example.com/images/beef.jpg', '2024-11-05', 'on'),
+(111, 2, 30, 'KG', 12.00, 45, 'Lamb, tender and flavorful, ideal for special occasions.', 'https://example.com/images/lamb.jpg', '2024-11-05', 'on'),
+(112, 2, 31, 'KG', 11.00, 50, 'Mutton, rich in flavor and perfect for hearty dishes.', 'https://example.com/images/mutton.jpg', '2024-11-05', 'on'),
+(113, 3, 32, 'KG', 8.00, 70, 'Pork, versatile and great for a variety of recipes.', 'https://example.com/images/pork.jpg', '2024-11-05', 'on'),
+(114, 1, 34, 'KG', 2.60, 160, 'Cumin Powder, essential for adding depth to your recipes.', 'https://example.com/images/cumin-powder.jpg', '2024-11-05', 'on'),
+(115, 1, 35, 'KG', 3.00, 150, 'Chili Powder, perfect for spicy dishes and seasoning.', 'https://example.com/images/chili-powder.jpg', '2024-11-05', 'on');
 
 -- --------------------------------------------------------
 
@@ -527,13 +531,13 @@ ALTER TABLE `delivery_point`
 -- AUTO_INCREMENT for table `farmer`
 --
 ALTER TABLE `farmer`
-  MODIFY `Farmer_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `Farmer_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `farmer_product_ads`
 --
 ALTER TABLE `farmer_product_ads`
-  MODIFY `Farmer_Product_AD_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `Farmer_Product_AD_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `location`

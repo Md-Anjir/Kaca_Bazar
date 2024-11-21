@@ -111,6 +111,27 @@ router.delete("/ad/:id", authenticateSeller, async (req, res) => {
   }
 });
 
+// Toggle ad status (on/off)
+router.patch("/ad/status/:adId", authenticateSeller, async(req, res) => {
+  const adId = req.params.adId;
+  const { status } = req.body;
+  const db = await connectToDatabase();
+
+
+  const sql = "UPDATE seller_product_ads SET Status = ? WHERE Seller_Product_AD_ID = ?";
+  db.query(sql, [status, adId], (err, result) => {
+    if (err) {
+      console.error("Error updating ad status:", err);
+      return res.status(500).json({ error: "Failed to update ad status" });
+    }
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Ad not found" });
+    }
+    res.status(200).json({ message: "Ad status updated successfully" });
+  });
+});
+
+
 router.get("/farmer-product-ads", async (req, res) => {
   try {
     const connection = await connectToDatabase();
