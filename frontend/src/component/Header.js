@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import logo from "../images/KacaBazarLogo.png";
 import cart from "../images/cart.png";
-import orders from "../images/shopping-bag.png";
+import order from "../images/order.png";
 import { Link, useNavigate } from "react-router-dom";
 import seller from "../images/agent.png";
 import farmer from "../images/farmerlogo.png";
@@ -150,8 +150,8 @@ export default function Header() {
             className="flex items-center gap-x-1 py-2 px-4 hover:bg-gray-100"
           >
             <img
-              src={orders}
-              alt="Orders"
+              src={order}
+              alt="Order"
               style={{ width: "30px", height: "30px" }}
             />
             <span className="text-sm font-medium">Orders</span>
@@ -232,7 +232,7 @@ export default function Header() {
           </Link>
           <Link to="/orders" className="flex items-center gap-2 p-2 rounded-md">
             <img
-              src={orders}
+              src={order}
               alt="Orders"
               style={{ width: "30px", height: "30px" }}
             />

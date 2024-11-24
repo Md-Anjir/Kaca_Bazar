@@ -1,15 +1,33 @@
 import express from "express";
-import { connectToDatabase } from "../lib/db.js"; // Ensure this is the correct path
-import cors from 'cors';
+import { connectToDatabase } from "../lib/db.js";
+import cors from "cors";
+import jwt from "jsonwebtoken";
 
 const router = express.Router();
 const app = express();
 app.use(express.json());
 
-app.use(cors({
-    origin: 'http://localhost:4000',
+app.use(
+  cors({
+    origin: "http://localhost:4000",
     credentials: true,
-}));
+  })
+);
+
+
+const authenticateBuyer = (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+
+  if (!token) return res.status(401).json({ message: "Unauthorized" });
+
+  jwt.verify(token, "anjir3734", (err, decoded) => {
+    if (err) return res.status(403).json({ message: "Invalid token" });
+
+    req.buyerId = decoded.Buyer_ID; // Fixing the variable name to buyerId
+    next();
+  });
+};
+
 
 router.get("/product-ads", async (req, res) => {
   try {
@@ -175,7 +193,55 @@ router.get("/search-products/:productId", async (req, res) => {
   }
 });
 
+// Endpoint to get all orders for a buyer
+router.get('/orders', authenticateBuyer, async (req, res) => {
+  try {
+    const db = await connectToDatabase();
+    const buyerId = req.buyerId; // Retrieved from token in `authenticateBuyer`
 
+    const sql = `
+      SELECT o.Order_ID, pl.Product_Name, o.Quantity, o.Price, o.Order_Confirmed_Time, o.Shipped_Time, o.Delivered_Time, o.Payment_Time
+      FROM \`order\` o
+      JOIN \`seller_product_ads\` spa ON o.Seller_Product_AD_ID = spa.Seller_Product_AD_ID
+      JOIN \`product_list\` pl ON spa.Product_ID = pl.Product_ID
+      WHERE o.Buyer_ID = ?
+      ORDER BY o.Shipped_Time IS NULL DESC, o.Order_Confirmed_Time IS NULL DESC, o.Order_Confirmed_Time, o.Shipped_Time
+    `;
+
+    const [results] = await db.query(sql, [buyerId]);
+
+    res.json(results);
+  } catch (error) {
+    console.error('Error fetching buyer orders:', error);
+    res.status(500).json({ error: 'Error fetching buyer orders' });
+  }
+});
+
+// Endpoint to process payment for an order
+router.patch('/orders/pay/:orderId', authenticateBuyer, async (req, res) => {
+  try {
+    const db = await connectToDatabase();
+    const orderId = req.params.orderId;
+    const buyerId = req.buyerId; // Retrieved from token in `authenticateBuyer`
+
+    const sql = `
+      UPDATE \`order\`
+      SET Payment_Time = NOW()
+      WHERE Order_ID = ? AND Buyer_ID = ?
+    `;
+
+    const [result] = await db.query(sql, [orderId, buyerId]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Order not found or not authorized to pay" });
+    }
+
+    res.status(200).json({ message: "Payment successful" });
+  } catch (error) {
+    console.error('Error processing payment:', error);
+    res.status(500).json({ error: 'Error processing payment' });
+  }
+});
 
 
 export default router;

@@ -4,6 +4,7 @@ import AdminPage from "./pages/Adminpage"
 import Home from "./pages/Home"
 import Register from "./pages/Register"
 import Login from "./pages/Login"
+import BuyerOrders from "./pages/BuyerOrders"
 import SellerLogin from "./pages/SellerLogin"
 import SellerRegister from "./pages/SellerRegister"
 import SellerProducts from "./pages/SellerProducts"
@@ -35,6 +36,7 @@ function App() {
         <Route path="/" element={<Home/>}></Route>
         <Route path="/register" element={<Register/>}></Route>
         <Route path="/login" element={<Login/>}></Route>
+        <Route path="/orders" element={<BuyerOrders/>}></Route>
         <Route path="/sellerregister" element={<SellerRegister/>}></Route>
         <Route path="/sellerlogin" element={<SellerLogin/>}></Route>
         <Route path="/seller/:sellerId/products" element={<SellerProducts />} />

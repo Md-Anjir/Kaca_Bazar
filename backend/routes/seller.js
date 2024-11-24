@@ -112,11 +112,10 @@ router.delete("/ad/:id", authenticateSeller, async (req, res) => {
 });
 
 // Toggle ad status (on/off)
-router.patch("/ad/status/:adId", authenticateSeller, async(req, res) => {
+router.patch("/ad/status/:adId", authenticateSeller, async (req, res) => {
   const adId = req.params.adId;
   const { status } = req.body;
   const db = await connectToDatabase();
-
 
   const sql = "UPDATE seller_product_ads SET Status = ? WHERE Seller_Product_AD_ID = ?";
   db.query(sql, [status, adId], (err, result) => {
@@ -130,7 +129,6 @@ router.patch("/ad/status/:adId", authenticateSeller, async(req, res) => {
     res.status(200).json({ message: "Ad status updated successfully" });
   });
 });
-
 
 router.get("/farmer-product-ads", async (req, res) => {
   try {
@@ -233,5 +231,98 @@ router.get("/farmer-products/:farmerId", async (req, res) => {
     }
 });
 
+// Endpoint to get the count of pending orders
+router.get('/orders/pending-count', authenticateSeller, async (req, res) => {
+  try {
+    const db = await connectToDatabase();
+    const sellerId = req.sellerId; // Retrieved from token in `authenticateSeller`
+
+    const [result] = await db.query(
+      'SELECT COUNT(*) AS pendingCount FROM `order` WHERE Order_Confirmed_Time IS NULL AND Seller_Product_AD_ID IN (SELECT Seller_Product_AD_ID FROM seller_product_ads WHERE Seller_ID = ?)',
+      [sellerId]
+    );
+
+    res.json({ count: result[0].pendingCount });
+  } catch (error) {
+    console.error('Error fetching pending orders count:', error); // Detailed logging
+    res.status(500).json({ error: 'Error fetching pending orders count' });
+  }
+});
+
+// Endpoint to get all orders for a seller, sorted by confirmation, shipment, and delivery status
+router.get('/orders', authenticateSeller, async (req, res) => {
+  try {
+    const db = await connectToDatabase();
+    const sellerId = req.sellerId; // Retrieved from token in `authenticateSeller`
+
+    const sql = `
+      SELECT o.Order_ID, pl.Product_Name, o.Quantity, o.Price, o.Order_Confirmed_Time, o.Shipped_Time, o.Delivered_Time, o.Payment_Time
+      FROM \`order\` o
+      JOIN \`seller_product_ads\` spa ON o.Seller_Product_AD_ID = spa.Seller_Product_AD_ID
+      JOIN \`product_list\` pl ON spa.Product_ID = pl.Product_ID
+      WHERE spa.Seller_ID = ?
+      ORDER BY o.Order_Confirmed_Time IS NULL DESC, o.Order_Confirmed_Time, o.Shipped_Time IS NULL DESC, o.Shipped_Time, o.Delivered_Time IS NULL DESC, o.Delivered_Time
+    `;
+
+    const [results] = await db.query(sql, [sellerId]);
+
+    res.json(results);
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+    res.status(500).json({ error: 'Error fetching orders' });
+  }
+});
+
+// Endpoint to confirm the order
+router.patch('/orders/confirm/:orderId', authenticateSeller, async (req, res) => {
+  try {
+    const db = await connectToDatabase();
+    const orderId = req.params.orderId;
+    const sellerId = req.sellerId; // Retrieved from token in `authenticateSeller`
+
+    const sql = `
+      UPDATE \`order\`
+      SET Order_Confirmed_Time = NOW()
+      WHERE Order_ID = ? AND Seller_Product_AD_ID IN (SELECT Seller_Product_AD_ID FROM seller_product_ads WHERE Seller_ID = ?)
+    `;
+
+    const [result] = await db.query(sql, [orderId, sellerId]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Order not found or not authorized to confirm" });
+    }
+
+    res.status(200).json({ message: "Order confirmed successfully" });
+  } catch (error) {
+    console.error('Error confirming order:', error);
+    res.status(500).json({ error: 'Error confirming order' });
+  }
+});
+
+// Endpoint to mark the order as shipped
+router.patch('/orders/ship/:orderId', authenticateSeller, async (req, res) => {
+  try {
+    const db = await connectToDatabase();
+    const orderId = req.params.orderId;
+    const sellerId = req.sellerId; // Retrieved from token in `authenticateSeller`
+
+    const sql = `
+      UPDATE \`order\`
+      SET Shipped_Time = NOW()
+      WHERE Order_ID = ? AND Seller_Product_AD_ID IN (SELECT Seller_Product_AD_ID FROM seller_product_ads WHERE Seller_ID = ?)
+    `;
+
+    const [result] = await db.query(sql, [orderId, sellerId]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Order not found or not authorized to ship" });
+    }
+
+    res.status(200).json({ message: "Order marked as shipped successfully" });
+  } catch (error) {
+    console.error('Error marking order as shipped:', error);
+    res.status(500).json({ error: 'Error marking order as shipped' });
+  }
+});
 
 export default router;

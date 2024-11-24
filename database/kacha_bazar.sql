@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 21, 2024 at 05:16 PM
+-- Generation Time: Nov 24, 2024 at 06:26 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -56,6 +56,18 @@ CREATE TABLE `delivery_point` (
   `Delivery_Point_Name` varchar(255) NOT NULL,
   `Location_ID` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `delivery_point`
+--
+
+INSERT INTO `delivery_point` (`Delivery_Point_ID`, `Delivery_Point_Name`, `Location_ID`) VALUES
+(1, 'Dakbangla', 1),
+(2, 'Doulotpur', 1),
+(3, 'Shat Gambuj Mosjid', 4),
+(4, 'Meherpur Sadar', 6),
+(5, 'Satkhira Sadar', 7),
+(6, 'Shiromoni', 1);
 
 -- --------------------------------------------------------
 
@@ -166,14 +178,25 @@ INSERT INTO `location` (`Location_ID`, `Location_Name`) VALUES
 CREATE TABLE `order` (
   `Order_ID` int(11) NOT NULL,
   `Buyer_ID` int(11) DEFAULT NULL,
-  `Product_AD_ID` int(11) DEFAULT NULL,
+  `Seller_Product_AD_ID` int(11) DEFAULT NULL,
   `Quantity` int(11) NOT NULL,
   `Price` decimal(10,2) NOT NULL,
-  `Confirmation` enum('no','yes') NOT NULL DEFAULT 'no',
   `Delivery_Point_ID` int(11) DEFAULT NULL,
-  `Date` date NOT NULL,
-  `Time` time NOT NULL
+  `Order_Placed_Time` datetime NOT NULL,
+  `Order_Confirmed_Time` datetime DEFAULT NULL,
+  `Shipped_Time` datetime DEFAULT NULL,
+  `Delivered_Time` datetime DEFAULT NULL,
+  `Payment_ID` int(11) DEFAULT NULL,
+  `Payment_Time` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `order`
+--
+
+INSERT INTO `order` (`Order_ID`, `Buyer_ID`, `Seller_Product_AD_ID`, `Quantity`, `Price`, `Delivery_Point_ID`, `Order_Placed_Time`, `Order_Confirmed_Time`, `Shipped_Time`, `Delivered_Time`, `Payment_ID`, `Payment_Time`) VALUES
+(1, 2, 82, 30, 300.00, 6, '2024-11-24 15:54:28', '2024-11-24 22:00:38', '0000-00-00 00:00:00', NULL, NULL, '2024-11-24 22:50:32'),
+(2, 2, 83, 5, 1000.00, 2, '2024-11-24 15:56:59', '0000-00-00 00:00:00', '0000-00-00 00:00:00', NULL, NULL, '2024-11-24 22:44:49');
 
 -- --------------------------------------------------------
 
@@ -451,8 +474,8 @@ ALTER TABLE `location`
 ALTER TABLE `order`
   ADD PRIMARY KEY (`Order_ID`),
   ADD KEY `Buyer_ID` (`Buyer_ID`),
-  ADD KEY `Product_AD_ID` (`Product_AD_ID`),
-  ADD KEY `Delivery_Point_ID` (`Delivery_Point_ID`);
+  ADD KEY `Delivery_Point_ID` (`Delivery_Point_ID`),
+  ADD KEY `order_ibfk_2` (`Seller_Product_AD_ID`);
 
 --
 -- Indexes for table `product_ad`
@@ -525,7 +548,7 @@ ALTER TABLE `buyer`
 -- AUTO_INCREMENT for table `delivery_point`
 --
 ALTER TABLE `delivery_point`
-  MODIFY `Delivery_Point_ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Delivery_Point_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `farmer`
@@ -549,7 +572,7 @@ ALTER TABLE `location`
 -- AUTO_INCREMENT for table `order`
 --
 ALTER TABLE `order`
-  MODIFY `Order_ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Order_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `product_ad`
@@ -615,7 +638,7 @@ ALTER TABLE `farmer_product_ads`
 --
 ALTER TABLE `order`
   ADD CONSTRAINT `order_ibfk_1` FOREIGN KEY (`Buyer_ID`) REFERENCES `buyer` (`Buyer_ID`),
-  ADD CONSTRAINT `order_ibfk_2` FOREIGN KEY (`Product_AD_ID`) REFERENCES `product_ad` (`Product_AD_ID`),
+  ADD CONSTRAINT `order_ibfk_2` FOREIGN KEY (`Seller_Product_AD_ID`) REFERENCES `seller_product_ads` (`Seller_Product_AD_ID`),
   ADD CONSTRAINT `order_ibfk_3` FOREIGN KEY (`Delivery_Point_ID`) REFERENCES `delivery_point` (`Delivery_Point_ID`);
 
 --
